@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class CandyScript : MonoBehaviour
 {
+
+    public bool isInvalidCandy = false;
     // Start is called before the first frame update
     void Start()
     {
@@ -35,4 +37,7 @@ public class CandyScript : MonoBehaviour
 
 
     }
+
+
+
 }
