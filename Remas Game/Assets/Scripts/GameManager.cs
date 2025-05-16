@@ -140,7 +140,12 @@ public class GameManager : MonoBehaviour
             candySpeeds = 1.5f;
         }
 
-      
+        // **Activate correct number of lives based on the current level**
+        for (int i = 0; i < liveHolder.transform.childCount; i++)
+        {
+            liveHolder.transform.GetChild(i).gameObject.SetActive(i < lives);
+        }
+
         Debug.Log($"Starting Level {currentLevel}: Lives = {lives}, Timer = {timeRemaining}, Candy Speed = {candySpeeds}");
 
         timerRunning = true;
