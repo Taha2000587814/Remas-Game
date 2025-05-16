@@ -18,28 +18,35 @@ public class GameManager : MonoBehaviour
 
     private void Awake()
     {
-        instance = this;
+        if (instance == null)
+        {
+            instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
     }
+
 
     // Start is called before the first frame update
     void Start()
     {
         NextLevelButton.SetActive(false);
+        foreach (GameObject star in stars)
+    {
+        star.SetActive(false);
     }
+
+        currentLevel = PlayerPrefs.GetInt("CurrentLevel", 1); // Load saved level or default to 1
+        StartLevel(currentLevel); // Start the game from level 1
+    }
+
 
     // Update is called once per frame
     void Update()
     {
-        if (timerRunning && timeRemaining > 0)
-        {
-            timeRemaining -= Time.deltaTime;
-            timerText.text = "Time: " + Mathf.Ceil(timeRemaining).ToString(); // Display remaining time
-        }
-        else if (timerRunning)
-        {
-            timerRunning = false;
-            EvaluatePerformance();
-        }
+       
     }
 
     public void incrementScores()
@@ -57,16 +64,23 @@ public class GameManager : MonoBehaviour
         if (lives > 0)
         {
             lives--;
-            //print(lives);
-            liveHolder.transform.GetChild(lives).gameObject.SetActive(false);
+            Debug.Log("Lives remaining: " + lives);
+
+            if (lives < liveHolder.transform.childCount)
+            {
+                liveHolder.transform.GetChild(lives).gameObject.SetActive(false);
+            }
         }
 
         if (lives <= 0)
         {
             gameOver = true;
+            EvaluatePerformance(); 
             GameOver();
         }
     }
+
+
 
     public void GameOver()
     {
@@ -109,7 +123,7 @@ public class GameManager : MonoBehaviour
         lives = levelLives[level - 1];
         timeRemaining = levelTimers[level - 1];
         timerRunning = true;
-       // StartCoroutine(LevelTimer());
+        StartCoroutine(LevelTimer());
     }
 
   
@@ -164,12 +178,39 @@ public class GameManager : MonoBehaviour
     // Move to Next Level
     public void NextLevel()
     {
-        currentLevel++;
-        if (currentLevel > 3) currentLevel = 1;
-        StartLevel(currentLevel);
+        if (currentLevel == 1)
+        {
+            currentLevel = 1; // Stay on Level 1
+        }
+        else if (currentLevel == 3)
+        {
+            currentLevel = 1; // Reset to Level 1 after Level 3
+        }
+        else
+        {
+            currentLevel = 3; // Jump from Level 1 to Level 3
+        }
+
+        PlayerPrefs.SetInt("CurrentLevel", currentLevel); // Save level before reloading
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name); // Reload scene with new level settings
     }
 
 
+
+
+    IEnumerator LevelTimer()
+    {
+        timerRunning = true;
+        while (timeRemaining > 0)
+        {
+            timeRemaining -= Time.deltaTime;
+            timerText.text = "" + Mathf.Ceil(timeRemaining).ToString(); // Update UI
+            yield return null; // Wait for next frame
+        }
+
+        timerRunning = false;
+        EvaluatePerformance(); // Trigger level completion
+    }
 
 
 }
