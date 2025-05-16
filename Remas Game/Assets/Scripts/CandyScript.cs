@@ -13,9 +13,10 @@ public class CandyScript : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
 
-        // Apply the single candy speed value
         float candySpeed = GameManager.instance.GetCandySpeed();
-        rb.velocity = new Vector2(0, -candySpeed);
+        Debug.Log($"Candy spawned with speed: {candySpeed}");
+
+        GetComponent<Rigidbody2D>().velocity = new Vector2(0, -candySpeed);
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -24,7 +25,16 @@ public class CandyScript : MonoBehaviour
         {
             GameManager.instance.scr.PlayOneShot(GameManager.instance.clip);
             Destroy(gameObject);
-            GameManager.instance.incrementScores();
+
+            // Check if candy is rotten
+            if (gameObject.tag == "Rotten")
+            {
+                GameManager.instance.InvalidCandyCaught(); // Reduce lives
+            }
+            else
+            {
+                GameManager.instance.incrementScores(); // Increase score for normal candy
+            }
         }
         else if (collision.gameObject.tag == "boundry")
         {

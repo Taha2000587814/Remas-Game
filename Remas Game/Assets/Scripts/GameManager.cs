@@ -114,30 +114,35 @@ public class GameManager : MonoBehaviour
     public Text timerText; // UI Text element for displaying the timer
     private float timeRemaining;
     private bool timerRunning = false;
-    public GameObject NextLevelButton; 
+    public GameObject NextLevelButton;
 
     // Start Level
     public void StartLevel(int level)
     {
         currentLevel = level;
-       if (currentLevel == 1)
-    {
-        lives = 5;
-        timeRemaining = 30f;
-        candySpeeds = 0.5f;
-    }
-    else if (currentLevel == 2)
-    {
-        lives = 4;
-        timeRemaining = 20f;
+
+        if (currentLevel == 1)
+        {
+            lives = 5;
+            timeRemaining = 30f;
+            candySpeeds = 0.5f;
+        }
+        else if (currentLevel == 2)
+        {
+            lives = 4;
+            timeRemaining = 20f;
             candySpeeds = 1f;
-    }
-    else if (currentLevel == 3)
-    {
-        lives = 3;
-        timeRemaining = 15f;
+        }
+        else if (currentLevel == 3)
+        {
+            lives = 3;
+            timeRemaining = 15f;
             candySpeeds = 1.5f;
-    }
+        }
+
+      
+        Debug.Log($"Starting Level {currentLevel}: Lives = {lives}, Timer = {timeRemaining}, Candy Speed = {candySpeeds}");
+
         timerRunning = true;
         StartCoroutine(LevelTimer());
     }
@@ -194,22 +199,24 @@ public class GameManager : MonoBehaviour
     // Move to Next Level
     public void NextLevel()
     {
-        if (currentLevel == 1)
+        // Increment level while keeping it within bounds (1 to 3)
+        if (currentLevel + 1 <= 3)
         {
-            currentLevel = 1; // Stay on Level 1
-        }
-        else if (currentLevel == 3)
-        {
-            currentLevel = 1; // Reset to Level 1 after Level 3
+            currentLevel++;
         }
         else
         {
-            currentLevel = 3; // Jump from Level 1 to Level 3
+            currentLevel = 1; // Reset to level 1 when exceeding level 3
         }
 
-        PlayerPrefs.SetInt("CurrentLevel", currentLevel); // Save level before reloading
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name); // Reload scene with new level settings
+        // Save the updated level before reloading the scene
+        PlayerPrefs.SetInt("CurrentLevel", currentLevel);
+        Debug.Log($"Switching to Level {currentLevel}");
+
+        // Reload the scene to apply changes
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
+
 
 
 
@@ -219,14 +226,17 @@ public class GameManager : MonoBehaviour
         timerRunning = true;
         while (timeRemaining > 0)
         {
+            Debug.Log($"Timer: {Mathf.Ceil(timeRemaining)} seconds remaining");
+
             timeRemaining -= Time.deltaTime;
-            timerText.text = "" + Mathf.Ceil(timeRemaining).ToString(); // Update UI
-            yield return null; // Wait for next frame
+            timerText.text = "" + Mathf.Ceil(timeRemaining).ToString();
+            yield return null;
         }
 
         timerRunning = false;
-        EvaluatePerformance(); // Trigger level completion
+        EvaluatePerformance();
     }
+
 
 
 }

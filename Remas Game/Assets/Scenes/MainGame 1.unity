@@ -1493,10 +1493,7 @@ MonoBehaviour:
   - 30
   - 20
   - 15
-  candySpeeds:
-  - 0.5
-  - 1
-  - 1.5
+  candySpeeds: 0
   ratingPanel: {fileID: 1510303410}
   stars:
   - {fileID: 928029197}
@@ -2908,6 +2905,7 @@ MonoBehaviour:
   - {fileID: 6467244537371388439, guid: eddb755be5d90ff4696360a63a29406a, type: 3}
   - {fileID: 5020011823697259821, guid: ede3a6727181cea4ab7baa0fcee86ce5, type: 3}
   - {fileID: 3682404588690537310, guid: ca6b13fb34cffea40828fc7487b9ac43, type: 3}
+  - {fileID: 3682404588690537310, guid: 0f1724de247e3b242b5e55e2f08d8d24, type: 3}
   spawnInterval: 1
 --- !u!4 &1564024471
 Transform:
