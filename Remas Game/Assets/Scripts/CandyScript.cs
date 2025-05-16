@@ -7,16 +7,15 @@ public class CandyScript : MonoBehaviour
 {
 
     public bool isInvalidCandy = false;
-    // Start is called before the first frame update
+    private Rigidbody2D rb;
+
     void Start()
     {
-        
-    }
+        rb = GetComponent<Rigidbody2D>();
 
-    // Update is called once per frame
-    void Update()
-    {
-        
+        // Apply the single candy speed value
+        float candySpeed = GameManager.instance.GetCandySpeed();
+        rb.velocity = new Vector2(0, -candySpeed);
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -27,15 +26,11 @@ public class CandyScript : MonoBehaviour
             Destroy(gameObject);
             GameManager.instance.incrementScores();
         }
-
-
         else if (collision.gameObject.tag == "boundry")
-        { 
+        {
             Destroy(gameObject);
             GameManager.instance.decreseLives();
         }
-
-
     }
 
 

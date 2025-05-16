@@ -107,7 +107,7 @@ public class GameManager : MonoBehaviour
     public int currentLevel = 1;
     public int[] levelLives = { 5, 4, 3 };
     public float[] levelTimers = { 30f, 20f, 15f };
-    public float[] candySpeeds = { 0.5f, 1f, 1.5f };
+    public float candySpeeds;
     public GameObject ratingPanel;
     public GameObject[] stars;
     public bool invalidCandyCaught = false;
@@ -120,18 +120,34 @@ public class GameManager : MonoBehaviour
     public void StartLevel(int level)
     {
         currentLevel = level;
-        lives = levelLives[level - 1];
-        timeRemaining = levelTimers[level - 1];
+       if (currentLevel == 1)
+    {
+        lives = 5;
+        timeRemaining = 30f;
+        candySpeeds = 0.5f;
+    }
+    else if (currentLevel == 2)
+    {
+        lives = 4;
+        timeRemaining = 20f;
+            candySpeeds = 1f;
+    }
+    else if (currentLevel == 3)
+    {
+        lives = 3;
+        timeRemaining = 15f;
+            candySpeeds = 1.5f;
+    }
         timerRunning = true;
         StartCoroutine(LevelTimer());
     }
 
-  
+
 
     // Adjust Candy Speed
     public float GetCandySpeed()
     {
-        return candySpeeds[currentLevel - 1];
+        return candySpeeds; 
     }
 
     // Handle Invalid Candy Catch

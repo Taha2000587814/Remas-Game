@@ -15,27 +15,27 @@ public class CloneScript : MonoBehaviour
     public GameObject[] candies;
     float maxX=8;
     [SerializeField] float spawnInterval;
-    // Start is called before the first frame update
     void Start()
     {
         startSpawn();
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-    }
+ 
 
     void spawnCandy()
     {
         int rand = Random.Range(0, candies.Length);
         float randx = Random.Range(-maxX, maxX);
-        Vector3 randPos = new Vector3(randx,transform.position.y,transform.position.z);
-        Instantiate(candies[rand], randPos, transform.rotation);
-       
+        Vector3 randPos = new Vector3(randx, transform.position.y, transform.position.z);
+
+        GameObject spawnedCandy = Instantiate(candies[rand], randPos, transform.rotation);
+
+        // Apply the single candy speed value
+        float candySpeed = GameManager.instance.GetCandySpeed();
+        spawnedCandy.GetComponent<Rigidbody2D>().velocity = new Vector2(0, -candySpeed);
     }
-   
-   IEnumerator spawnCandies()
+
+    IEnumerator spawnCandies()
     {
         yield return new WaitForSeconds(2f);
         while (true)
