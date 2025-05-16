@@ -29,7 +29,7 @@ public class CandyScript : MonoBehaviour
             // Check if candy is rotten
             if (gameObject.tag == "Rotten")
             {
-                GameManager.instance.InvalidCandyCaught(); // Reduce lives
+                GameManager.instance.InvalidCandyCaught(); // Reduce lives only when caught
             }
             else
             {
@@ -38,11 +38,14 @@ public class CandyScript : MonoBehaviour
         }
         else if (collision.gameObject.tag == "boundry")
         {
+            // **Check if it's a rotten candy before reducing lives**
+            if (gameObject.tag != "Rotten")
+            {
+                GameManager.instance.decreseLives(); // Reduce lives only for normal candies
+            }
+
             Destroy(gameObject);
-            GameManager.instance.decreseLives();
         }
     }
-
-
 
 }
